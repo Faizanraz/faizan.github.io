@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body{
+        background-color: rgb(58, 2, 58);
+    }
+    input:nth-child(even){
+       
+        font-size: 25px;
+        width: 200px;
+        background: transparent;
+        color: white;
+        margin: 0px 20px;
+        border: none;
+        border-bottom: 2px solid rgb(220, 100, 250);
+        padding: 10px;
+    }
+    input:nth-child(odd){
+       
+        font-size: 25px;
+        width: 200px;
+        background: transparent;
+        color: white;
+        margin: 0px 20px;
+        border: none;
+        border-bottom: 2px solid rgb(255, 70, 172);
+        padding: 10px;
+    }
+    input:focus:nth-child(even){
+        border: 3px solid rgb(255, 70, 172);
+        /* box-shadow: none; */
+        outline: none;
+    }
+    input:focus:nth-child(odd){
+        border: 3px solid rgb(220, 100, 250);
+        /* box-shadow: none; */
+        outline: none;
+    }
+    .form{
+        margin-top: 20px;
+        padding-top: 20px;
+    }
+    table{
+        font-size: 30px;
+        color: white;
+    }
+    thead{
+        color: rgb(255, 70, 172);
+    }
+    button:nth-child(even){
+        font-size: 20px;
+        padding: 10px;
+        border-radius: 20px;
+        background-color: rgb(255, 70, 172);
+        color: white;
+    }
+    button:nth-child(odd){
+        font-size: 20px;
+        padding: 10px;
+        border-radius: 20px;
+        background-color: rgb(220, 100, 250);
+        color: white;
+    }
+    .name{
+         
+        color: rgb(70, 249, 255);
+        font-weight: bolder;
+    }
+</style>
+
+<body>
+    <form action="" id="dataForm" class="form">
+<input placeholder="Name" name="id" id="id" type="text">
+        <input placeholder="Name" name="name" id="name" type="text">
+        <input placeholder="Name" name="age" id="age" type="number">
+        <input placeholder="Name" name="study" id="cour" type="text">
+        <input placeholder="Name" name="branch" id="branch" type="text">
+        <button id="sum">Submit</button>
+        
+    </form>
+
+    <button id="upd">Update</button>
+
+    <table border="1">
+        <thead>
+            <td>ID</td>
+            <td>Name</td>
+            <td>Age</td>
+            <td>Study</td>
+            <td>Branch</td>
+            <td>Action</td>
+
+        </thead>
+        <tbody id="box">
+
+        </tbody>
+    </table>
+    <script>
+        var studentApi = [
+            { id:1, name: "Faizan", age: 20, study: "B-tech", branch: "CS" },
+            { id:2, name: "Junaid", age: 23, study: "B-tech", branch: "CS" },
+            { id:3, name: "Ubaid", age: 19, study: "B-tech", branch: "CS" },
+            { id:4, name: "Saniya", age: 21, study: "B-tech", branch: "CS" },
+            { id:5, name: "Fathma", age: 26, study: "B-tech", branch: "CS" },
+            { id:6, name: "Juber", age: 18, study: "B-tech", branch: "CS" },
+        ];
+        var upd = document.getElementById("upd");
+       
+        // displayData();
+
+        // Function to save data to local storage
+        function saveToLocalStorage() {
+            localStorage.setItem("stud_data", JSON.stringify(studentApi));
+        }
+
+        // Function to load data from local storage
+        function loadFromLocalStorage() {
+            var data = localStorage.getItem('stud_data');
+            if (data) {
+                studentApi = JSON.parse(data);
+            }
+        }
+
+        // Function to display data
+    function displayData() {
+            var html = document.getElementById('box');
+            html.innerHTML = "";
+
+            // Sort the studentApi array by name
+            // studentApi.id((a, b) => a.id - b.id);
+
+            studentApi.forEach(function (item) {
+                var row = document.createElement('tr');
+                var button = document.createElement('button');
+                var button2 = document.createElement('button');
+                button.innerHTML = "Delete";
+                button2.innerHTML = "Update";
+                button.onclick = function () {
+                    var index = studentApi.indexOf(item);
+                    if (index > -1) {
+                        studentApi.splice(index, 1);
+                        saveToLocalStorage();
+                        displayData();
+                    }
+                };
+                // 
+                button2.onclick = function () {
+                    var index = studentApi.indexOf(item);
+                    alert(item.name)
+                     document.getElementById("id").value = item.id;
+                    document.getElementById("name").value = item.name;
+                    document.getElementById("age").value = item.age;
+                    document.getElementById("cour").value = item.study;
+                    document.getElementById("branch").value = item.branch;
+
+                    var index = studentApi.indexOf(item);
+                    if (index > -1) {
+
+                        saveToLocalStorage();
+                        displayData();
+                    }
+
+                    // Add event listener for update button
+                    upd.addEventListener("click", function () {
+                        var index = studentApi.findIndex(function (item) {
+                            return item.id === document.getElementById("id").value;
+                            console.log(item.id)
+                        });
+                        console.log(index)
+                        if (index !== -1) {
+                            studentApi[index] = {
+                                 id: document.getElementById("id").value,
+                                name: document.getElementById("name").value,
+                                age: document.getElementById("age").value,
+                                study: document.getElementById("cour").value,
+                                branch: document.getElementById("branch").value
+                            };
+                            saveToLocalStorage();
+                            displayData();
+                        } else {
+                            alert("Student not found! 🤐");
+                        }
+                    });
+
+                };
+                row.innerHTML = '<td class = "name">' + item.id + "</td><td>" + item.name + "</td><td>" + item.age + "</td><td>" + item.study + "</td><td>" + item.branch + '</td>';
+                html.appendChild(row);
+                row.appendChild(button);
+                row.appendChild(button2);
+            });
+        }
+
+        loadFromLocalStorage();
+
+       
+        document.getElementById('dataForm').addEventListener('submit', function (event) {
+
+           
+            event.preventDefault(); // Prevent default form submission
+            var id = document.getElementById("id").value;
+            var name = document.getElementById("name").value;
+            var age = document.getElementById("age").value;
+            var study = document.getElementById("cour").value;
+            var branch = document.getElementById("branch").value;
+            if (id !== "" && name !== "" && age !== "" && study !== "" && branch !== "") {
+                studentApi.push({ id: id, name: name, age: age, study: study, branch: branch });
+                saveToLocalStorage(); 
+                displayData(); 
+                event.target.reset(); 
+            } else {
+                alert("Please fill all properties 😊");
+            }
+        });
+        displayData();
+    </script>
+</body>
+
+</html>
